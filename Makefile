@@ -28,6 +28,9 @@ STM32F10x_LIB_DIR      = $(ROOT_DIR)/stm32f10x_lib
 # define freertos dir
 FREERTOS_DIR = $(ROOT_DIR)/freertos
 
+# radiohead library path
+RADIOHEAD_DIR=$(ROOT_DIR)/RadioHead-1.97
+
 # define user dir
 USER_DIR     = $(ROOT_DIR)/user
 
@@ -37,6 +40,7 @@ LINK_SCRIPT  = $(ROOT_DIR)/stm32_flash.ld
 # user specific
 SRC       =
 ASM_SRC   =
+CPP_SRC   =
 SRC      += $(USER_DIR)/main.c
 SRC      += $(USER_DIR)/uart_log.c
 
@@ -54,6 +58,8 @@ INC_DIR  = $(patsubst %, -I%, $(INCLUDE_DIRS))
 DEFS	 = $(DDEFS) -DRUN_FROM_FLASH=1
 
 OBJECTS  = $(ASM_SRC:.s=.o) $(SRC:.c=.o) $(CPP_SRCS:.cpp=.o)
+$(info $$OBJECTS is [${OBJECTS}])
+$(info $$CPP_SRCS is [${CPP_SRCS}])
 
 # Define optimisation level here
 OPT = -Os
@@ -70,10 +76,10 @@ LD_FLAGS = $(MC_FLAGS) -g -gdwarf-2 -mthumb -nostartfiles -Xlinker --gc-sections
 all: $(OBJECTS) $(PROJECT_NAME).elf  $(PROJECT_NAME).hex $(PROJECT_NAME).bin
 	$(TOOLCHAIN)size $(PROJECT_NAME).elf
 
-%.o: %.cpp
-	$(CC) -c $(CP_FLAGS) -I . $(INC_DIR) $< -o $@
+#%.o: %.cpp
+#	$(CC) -c $(CP_FLAGS) -I . $(INC_DIR) $< -o $@
 
-%.o: %.c
+%.o: %.c %.cpp
 	$(CC) -c $(CP_FLAGS) -I . $(INC_DIR) $< -o $@
 
 %.o: %.s
@@ -102,4 +108,5 @@ clean:
 	-rm -rf $(PROJECT_NAME).bin
 	-rm -rf $(SRC:.c=.lst)
 	-rm -rf $(ASM_SRC:.s=.lst)
+	-rm -rf $(CPP_SRCS:.cpp=.lst)
 
