@@ -46,13 +46,14 @@ INCLUDE_DIRS  = $(USER_DIR)
 # include sub makefiles
 include makefile_std_lib.mk   # STM32 Standard Peripheral Library
 include makefile_freertos.mk  # freertos source
+include makefile_radiohead.mk  # radiohead source
 
 INC_DIR  = $(patsubst %, -I%, $(INCLUDE_DIRS))
 
 # run from Flash
 DEFS	 = $(DDEFS) -DRUN_FROM_FLASH=1
 
-OBJECTS  = $(ASM_SRC:.s=.o) $(SRC:.c=.o)
+OBJECTS  = $(ASM_SRC:.s=.o) $(SRC:.c=.o) $(CPP_SRCS:.cpp=.o)
 
 # Define optimisation level here
 OPT = -Os
@@ -68,6 +69,9 @@ LD_FLAGS = $(MC_FLAGS) -g -gdwarf-2 -mthumb -nostartfiles -Xlinker --gc-sections
 #
 all: $(OBJECTS) $(PROJECT_NAME).elf  $(PROJECT_NAME).hex $(PROJECT_NAME).bin
 	$(TOOLCHAIN)size $(PROJECT_NAME).elf
+
+%.o: %.cpp
+	$(CC) -c $(CP_FLAGS) -I . $(INC_DIR) $< -o $@
 
 %.o: %.c
 	$(CC) -c $(CP_FLAGS) -I . $(INC_DIR) $< -o $@
