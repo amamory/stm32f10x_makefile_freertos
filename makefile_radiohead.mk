@@ -3,7 +3,7 @@
 #DDEFS += -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DHSE_VALUE=8000000
 
 # source director
-RADIOHEAD_PATH=/home/lsa/Arduino/libraries/RadioHead
+RADIOHEAD_PATH=./RadioHead-1.97
 
 # use libraries, please add or remove when you use or remove it.
 CPP_SRCS  += $(RADIOHEAD_PATH)/RHGenericDriver.cpp
