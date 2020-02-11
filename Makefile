@@ -2,6 +2,7 @@
 # toolchain
 TOOLCHAIN    = arm-none-eabi-
 CC           = $(TOOLCHAIN)gcc
+CXX          = $(TOOLCHAIN)g++
 CP           = $(TOOLCHAIN)objcopy
 AS           = $(TOOLCHAIN)gcc -x assembler-with-cpp
 HEX          = $(CP) -O ihex
@@ -58,8 +59,9 @@ INC_DIR  = $(patsubst %, -I%, $(INCLUDE_DIRS))
 DEFS	 = $(DDEFS) -DRUN_FROM_FLASH=1
 
 OBJECTS  = $(ASM_SRC:.s=.o) $(SRC:.c=.o) $(CPP_SRCS:.cpp=.o)
-$(info $$OBJECTS is [${OBJECTS}])
-$(info $$CPP_SRCS is [${CPP_SRCS}])
+#$(info $$OBJECTS is [${OBJECTS}])
+#$(info $$CPP_SRCS is [${CPP_SRCS}])
+#$(info $$INC_DIR is [${INC_DIR}])
 
 # Define optimisation level here
 OPT = -Os
@@ -68,6 +70,7 @@ MC_FLAGS = -mcpu=$(MCU)
 
 AS_FLAGS = $(MC_FLAGS) -g -gdwarf-2 -mthumb  -Wa,-amhls=$(<:.s=.lst)
 CP_FLAGS = $(MC_FLAGS) $(OPT) -g -gdwarf-2 -mthumb -fomit-frame-pointer -Wall -fverbose-asm -Wa,-ahlms=$(<:.c=.lst) $(DEFS)
+CXXFLAGS = $(CP_FLAGS) -W -pedantic
 LD_FLAGS = $(MC_FLAGS) -g -gdwarf-2 -mthumb -nostartfiles -Xlinker --gc-sections -T$(LINK_SCRIPT) -Wl,-Map=$(PROJECT_NAME).map,--cref,--no-warn-mismatch
 
 #
@@ -76,10 +79,10 @@ LD_FLAGS = $(MC_FLAGS) -g -gdwarf-2 -mthumb -nostartfiles -Xlinker --gc-sections
 all: $(OBJECTS) $(PROJECT_NAME).elf  $(PROJECT_NAME).hex $(PROJECT_NAME).bin
 	$(TOOLCHAIN)size $(PROJECT_NAME).elf
 
-#%.o: %.cpp
-#	$(CC) -c $(CP_FLAGS) -I . $(INC_DIR) $< -o $@
+%.o: %.cpp
+	$(CXX) -c $(CP_FLAGS) -I . $(INC_DIR) $< -o $@
 
-%.o: %.c %.cpp
+%.o: %.c
 	$(CC) -c $(CP_FLAGS) -I . $(INC_DIR) $< -o $@
 
 %.o: %.s

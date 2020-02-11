@@ -24,7 +24,7 @@ $ make
 $ make clean
 ```
 
-### download to mcu by stlink 
+### download to mcu by stlink
 ```
 $ make flash
 ```
@@ -79,4 +79,10 @@ http://www.jianshu.com/p/4635a2380698
 mcu: STM32F103C8T6
 
 GPIOB11--Led
+
+
+## TODO Amory - my own reminder to my future self
+
+I used this project to implement mesh network using RadioHead library using Blue Pill (STM32F10x). However, I have to adapt the low level part of the software. Luckly, there is something similar to STM32F4xx in the dir RadioHead-1.97/STM32ArduinoCompat. Look at makefile_radiohead.mk, ./STM32ArduinoCompat/wirish.cpp, and ./STM32ArduinoCompat/Hardwareserial.cpp to see what i have done so far. grep for 'TODO Amory' to check the changes so far.
+
 

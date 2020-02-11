@@ -4,8 +4,10 @@
 // using STM32F4xx_DSP_StdPeriph_Lib_V1.3.0
 
 #include <RadioHead.h>
-#if (RH_PLATFORM == RH_PLATFORM_STM32STD)
+#if (RH_PLATFORM == RH_PLATFORM_STM32STD || RH_PLATFORM == RH_PLATFORM_STM32F1)
 #include <wirish.h>
+
+// TODO Amory. I have to adapt the low level part of the software to RH_PLATFORM_STM32F1 and stm32f10x.h
 
 SerialUSBClass SerialUSB;
 
@@ -20,10 +22,10 @@ typedef struct
     uint8_t          extipinsource;
 } GPIOPin;
 
-// These describe the registers and bits for each digital IO pin to allow us to 
+// These describe the registers and bits for each digital IO pin to allow us to
 // provide Arduino-like pin addressing, digitalRead etc.
 // Indexed by pin number
-GPIOPin pins[] = 
+GPIOPin pins[] =
 {
     { RCC_AHB1Periph_GPIOA, GPIOA, GPIO_Pin_0,  EXTI_PortSourceGPIOA, EXTI_PinSource0  }, // 0 = PA0
     { RCC_AHB1Periph_GPIOA, GPIOA, GPIO_Pin_1,  EXTI_PortSourceGPIOA, EXTI_PinSource1  },
@@ -122,7 +124,7 @@ typedef struct
 
 // IRQ line data indexed by pin source number with its port
 // and the programmable handler that will handle interrupts on that line
-IRQLine irqlines[] = 
+IRQLine irqlines[] =
 {
     { EXTI_Line0,  EXTI0_IRQn,     0 },
     { EXTI_Line1,  EXTI1_IRQn,     0 },
@@ -158,7 +160,7 @@ void SysTickConfig()
 	/* Capture error */
 	while (1);
     }
-    
+
     /* Configure the SysTick handler priority */
     NVIC_SetPriority(SysTick_IRQn, 0x0);
     // SysTick_Handler will now be called every 1 ms
@@ -360,11 +362,11 @@ void attachInterrupt(uint8_t pin, void (*handler)(void), int mode)
 
     EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
     if (mode == RISING)
-	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;  
+	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
     else if (mode == FALLING)
-	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;  
+	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
     else if (mode == CHANGE)
-	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling;  
+	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
     EXTI_InitStructure.EXTI_LineCmd = ENABLE;
     EXTI_Init(&EXTI_InitStructure);
 
@@ -374,7 +376,7 @@ void attachInterrupt(uint8_t pin, void (*handler)(void), int mode)
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x0F;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 
-    NVIC_Init(&NVIC_InitStructure); 
+    NVIC_Init(&NVIC_InitStructure);
 
     // The relevant EXTI?_IRQHandler
     // will now be called when the pin makes the selected transition

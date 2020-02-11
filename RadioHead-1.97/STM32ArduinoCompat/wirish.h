@@ -7,7 +7,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
+#if (RH_PLATFORM == RH_PLATFORM_STM32STD)
 #include <stm32f4xx_rng.h>
+#endif
 
 #define PROGMEM
 #define memcpy_P memcpy

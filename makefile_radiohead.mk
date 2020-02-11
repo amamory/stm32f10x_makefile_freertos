@@ -1,8 +1,15 @@
 
 # STD Defines
 #DDEFS += -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DHSE_VALUE=8000000
+# RH defines
+   # this define will set RH_PLATFORM == RH_PLATFORM_STM32F1
+DDEFS += -DSTM32F1XX
 
 # use libraries, please add or remove when you use or remove it.
+# STM specific files
+CPP_SRCS  += $(RADIOHEAD_DIR)/STM32ArduinoCompat/wirish.cpp
+CPP_SRCS  += $(RADIOHEAD_DIR)/STM32ArduinoCompat/Hardwareserial.cpp
+
 CPP_SRCS  += $(RADIOHEAD_DIR)/RHGenericDriver.cpp
 CPP_SRCS  += $(RADIOHEAD_DIR)/RH_CC110.cpp
 CPP_SRCS  += $(RADIOHEAD_DIR)/RH_E32.cpp
@@ -14,11 +21,12 @@ CPP_SRCS  += $(RADIOHEAD_DIR)/RH_E32.cpp
 #CPP_SRCS  += $(RADIOHEAD_DIR)/RH_RF24.cpp
 #CPP_SRCS  += $(RADIOHEAD_DIR)/RH_NRF51.cpp
 #CPP_SRCS  += $(RADIOHEAD_DIR)/RH_RF69.cpp
-CPP_SRCS  += $(RADIOHEAD_DIR)/RHSPIDriver.cpp
+#CPP_SRCS  += $(RADIOHEAD_DIR)/RH_ASK.cpp
 CPP_SRCS  += $(RADIOHEAD_DIR)/RHGenericSPI.cpp
 CPP_SRCS  += $(RADIOHEAD_DIR)/RHSoftwareSPI.cpp
-CPP_SRCS  += $(RADIOHEAD_DIR)/RHHardwareSPI.cpp
-CPP_SRCS  += $(RADIOHEAD_DIR)/RH_Serial.cpp
+CPP_SRCS  += $(RADIOHEAD_DIR)/RHSPIDriver.cpp
+#CPP_SRCS  += $(RADIOHEAD_DIR)/RHHardwareSPI.cpp
+#CPP_SRCS  += $(RADIOHEAD_DIR)/RH_Serial.cpp
 CPP_SRCS  += $(RADIOHEAD_DIR)/RH_TCP.cpp
 CPP_SRCS  += $(RADIOHEAD_DIR)/RHCRC.cpp
 CPP_SRCS  += $(RADIOHEAD_DIR)/RHEncryptedDriver.cpp
@@ -31,5 +39,6 @@ CPP_SRCS  += $(RADIOHEAD_DIR)/RHReliableDatagram.cpp
 
 # include directories
 INCLUDE_DIRS += $(RADIOHEAD_DIR)
+INCLUDE_DIRS += $(RADIOHEAD_DIR)/STM32ArduinoCompat
 
 
